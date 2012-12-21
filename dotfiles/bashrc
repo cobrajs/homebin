@@ -72,6 +72,7 @@ alias gitd='git diff'
 alias pgrep='pgrep -l'
 alias bashrce='vim ~/.bashrc'
 alias bashrcr='source ~/.bashrc'
+alias mex='chmod +x'
 
 # Awesome
 alias rcluae='vim $XDG_CONFIG_HOME/awesome/rc.lua'
@@ -125,4 +126,4 @@ extractarchivedirname() {
 }
 
 # }}}
-for x in $(ls -a | grep -P "[a-z]+"); do mv $x ${x#*.}; done
+# for x in $(ls -a | grep -P "[a-z]+"); do mv $x ${x#*.}; done
