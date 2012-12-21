@@ -1,0 +1,15 @@
+#!/bin/bash
+
+FONT="-*-mintsmild-*-*-*-*-16-*-*-*-*-*-*"
+
+DEVICE=$(mount | grep 'vfat' | awk '{ print $3 }' | dmenu -fn "$FONT")
+
+if [[ $DEVICE != "" ]]; then
+  gksudo -m "Please provide your password for umounting $DEVICE" umount $DEVICE
+  if [ $? -ne 0 ]; then
+    MESSAGE="Failed to umount $DEVICE"
+  else
+    MESSAGE="$DEVICE safe to remove"
+  fi
+  echo "$MESSAGE" | dzen2 -p 2 -fn "$FONT"
+fi

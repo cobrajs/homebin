@@ -1,0 +1,42 @@
+"3.5 (created: 2012/08/04 00:41:20)
+
+highlight Bell border: 0 none; background-color: black;
+highlight Boolean color: #CC9393;
+highlight CmdLine color: #DCDCCD; font-family: terminus; padding: 1px;
+highlight CmdLine>* font-family: terminus;
+highlight CompDesc color: #808080; width: 50%;
+highlight CompItem font-family: terminus; font-size: 11px;
+highlight CompItem>* padding: 0 .5ex;
+highlight CompItem[selected] color: #2E4340; background: #CCDC90;
+highlight CompResult width: 45%; overfloaw: hidden;
+highlight CompTitle color: #ACBC90; background: #3F3F3F; font-weight: bold;
+highlight CompTitle>* padding: 0 .5ex;
+highlight ErrorMsg color: #3F3F3F; background: #CC9393; font-weight: bold;
+highlight Filter color: #2E4340; background: #CCDC90; font-weight: bold;
+highlight FrameIndicator background-color: #CC9393; opacity: 0.5; z-index: 999; position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+highlight Hint font-family: monospace; font-size: 10px; font-weight: bold; color: #385F38; background-color: #F8F893; border-color: ButtonShadow; border-width: 0px; border-style: solid; padding 0px 1px 0px 1px;
+highlight HintActive background: #F18C96; color: #333333;
+highlight HintElem background-color: #8FAF9F; color: #000D18;
+highlight Indicator color: #94BFF3;
+highlight InfoMsg color: #DCDCCD; background: #3F3F3F;
+highlight LineNr color: orange; background: #3F3F3F;
+highlight ModeMsg color: #DCDCCD; background: #3F3F3F;
+highlight MoreMsg color: #9ECE9E; background: #3F3F3F;
+highlight NonText color: #94BFF3; min-height: 16px; padding-left: 2px;
+highlight Normal color: #DCDCCD; background: #3F3F3F; font-family: terminus;
+highlight Null color: #94BFF3;
+highlight Number color: #94BFF3;
+highlight Question color: #9ECE9E; background: #3F3F3F; font-weight: bold;
+highlight String color: #9ECE9E;
+highlight TabNumber font-weight: bold; margin: 0; padding-right: .3ex;
+highlight Tag color: #94BFF3;
+highlight Title color: #ACBC90; background: #3F3F3F; font-weight: bold;
+highlight URL text-decoration: none; color: #9ECE9E; background: inherit;
+highlight WarningMsg color: #CC9393; background: #3F3F3F;
+set noautocomplete
+style! -name=statusbar chrome://* <<EOF
+#liberator-statusline { font-family: terminus ! important; }
+EOF
+source! /home/cobra/.vimperatorrc.local
+
+" vim: set ft=vimperator:
