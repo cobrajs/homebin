@@ -39,4 +39,10 @@ style! -name=statusbar chrome://* <<EOF
 EOF
 source! /home/cobra/.vimperatorrc.local
 
+" For easier movement and tab switching
+noremap hh gT
+noremap ll gt
+noremap J 10j
+noremap K 10k
+
 " vim: set ft=vimperator:
