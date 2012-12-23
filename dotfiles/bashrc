@@ -12,14 +12,13 @@ fi
 alias ls='ls --color=auto'
 PS1="\[\e[0;32m\]\u\[\e[1;33m\]@\[\e[1;37m\][\[\e[0;36m\]\$(shrink.sh)\[\e[1;37m\]] \[\e[2;32m\]$ \[\e[0m\]"
 
-PATH=$PATH:$HOME/bin
+PATH=$PATH:$HOME/bin:$HOME/bin/games
 
 eval "`dircolors -b`"
 
 echo -ne "Today is "; date
 echo -e ""; cal;
-echo -ne "Uptime:";uptime | awk /'up/
-{print $3,$4}'
+echo -ne "Uptime:";uptime 
 
 HISTCONTROL=ignoreboth:ignorespace
 
@@ -53,6 +52,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias ltr='ls -ltr'
 alias sl='ls'
+alias lswc='ls | wc -l'
 
 # cd
 alias ..='cd ..'
@@ -125,5 +125,29 @@ extractarchivedirname() {
   extractarchivedir "$(echo $1 | cut -d. -f1)" "$1"
 }
 
+# Use cdargs to move around
+function cv (){
+  cdargs "$1" && cd "`cat "$HOME/.cdargsresult"`" ;
+}
+
+encrypt () {
+gpg -ac --no-options "$1"
+}
+
+decrypt () {
+gpg --no-options "$1"
+}
+
 # }}}
 # for x in $(ls -a | grep -P "[a-z]+"); do mv $x ${x#*.}; done
+
+
+# Today's Downloads folder creator
+TODAY_FOLDER="$(date +%b%d)"
+WHERE_DAILY_DOWNLOADS_ARE=dailies
+alias today='cd ~/$WHERE_DAILY_DOWNLOADS_ARE/$TODAY_FOLDER'
+function dt {
+  cd "`eval ~/dev/dateGoto.py $1 $2 $3 $4 $5 $6`"
+}
+
+
