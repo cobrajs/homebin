@@ -178,11 +178,11 @@ let g:neocomplcache_omni_patterns.haxe = '\v([\]''"]|\w)(\.|\()'
 " Make it easier to copy and paste stuff into vim
 "
 
-nnoremap ,ya mzggVG"*y`z
-inoremap ,ya <esc>mzggVG"*y`z
+nnoremap <leader>ya mzggVG"*y`z
+inoremap <leader>ya <esc>mzggVG"*y`z
 
-nnoremap ,pa ggVG"_d"*pgg"_dd
-inoremap ,pa <esc>ggVG"_d"*pgg"_dd
+nnoremap <leader>pa ggVG"_d"*pgg"_dd
+inoremap <leader>pa <esc>ggVG"_d"*pgg"_dd
 
 
 nnoremap <c-s> :w<cr>
@@ -207,3 +207,14 @@ nmap <Leader>n <esc>:call NumberingAlternate()<cr>i
 nnoremap ;; $a;<esc>
 inoremap ;; <esc>$a;<esc>
 
+" Edit and Source vimrc
+nnoremap <leader>ve :vsplit $MYVIMRC<cr>
+nnoremap <leader>vs :source $MYVIMRC<cr>
+
+" Exit Insert mode
+inoremap jk <esc>
+
+let g:ctrlp_custom_ignoe = {
+      \ 'dir' : '\v[\/]\.(git|hg|svn)',
+      \ 'haxe' : '*bin\/.*'
+      \ }
