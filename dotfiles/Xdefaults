@@ -17,12 +17,12 @@ URxvt*depth:					  32
 URxvt*background:				black
 URxvt*scrollBar_right:	false
 !URxvt*font:					    xft:DejaVu Sans Mono-9
-URxvt*font:					    xft:Profont-10
+URxvt*font:					    xft:Profont-9
 URxvt*cursorBlink:			false
 !URxvt*cursorUnderline:	true
 URxvt*scrollBar:        false
 URxvt*perl-ext-common:	default,clipboard
-URxvt*saveLines:        500
+URxvt*saveLines:        1024
 !URxvt*transparent:      true
 !URxvt*fading:           40
 !URxvt*shading:          10

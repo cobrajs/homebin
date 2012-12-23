@@ -67,16 +67,17 @@ else
 
 endif " has("autocmd")
 
+" For 2 wide tabs and 2 space indenting
 set mouse=a
 set tabstop=2
 set shiftwidth=2
 set expandtab 
 
+" Old setting to enable passive FTP
 let g:netrw_ftpextracmd = "passive"
 
-nmap sws :w<cr>:!./%<cr>
-imap sws <esc>:w<cr>:!./%<cr>
 
+" Line numbers
 set number
 
 au BufWinLeave *.* mkview
@@ -90,7 +91,6 @@ let g:miniBufExplMapWindowNavArrows = 1
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplModSelTarget = 1
 
-"color calmar256-dark
 color zenburn
 
 set switchbuf=useopen,usetab,newtab
@@ -106,6 +106,7 @@ function! RunIt()
   let has_main = system("find " . expand("%:h") . " -name 'main.lua' -maxdepth 1 | wc -l")
   let is_love = system("grep -i 'love.' " . expand("%") . " | wc -l")
   let is_moai = system("grep -i 'moai' " . expand("%") . " | wc -l")
+  let is_64 = system("uname -n | grep 'x86_64' | wc -l")
   wall
   if base == 'lua' && has_main > 0
     if is_love > 0
@@ -122,7 +123,11 @@ function! RunIt()
   elseif base == 'sh'
     !bash %
   elseif base == 'hx'
-    !haxelib run nme test *.nmml neko -64
+    if is_64 > 0
+      !haxelib run nme test *.nmml neko -64
+    else
+      !haxelib run nme test *.nmml neko
+    endif
   else
     !./%
   endif
@@ -214,7 +219,13 @@ nnoremap <leader>vs :source $MYVIMRC<cr>
 " Exit Insert mode
 inoremap jk <esc>
 
+" Custom ignore for CtrlP
 let g:ctrlp_custom_ignoe = {
       \ 'dir' : '\v[\/]\.(git|hg|svn)',
-      \ 'haxe' : '*bin\/.*'
+      \ 'haxe' : '.*bin\/.*'
       \ }
+
+" For displaying invisibles, like tabs and eols
+nmap <leader>l :set list!<cr>
+set listchars=tab:¸\ ,eol:¬
+
