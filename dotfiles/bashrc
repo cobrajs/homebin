@@ -77,6 +77,7 @@ alias pgrep='pgrep -l'
 alias bashrce='vim ~/.bashrc'
 alias bashrcr='source ~/.bashrc'
 alias mex='chmod +x'
+alias show='sxiv'
 
 # Awesome
 alias rcluae='vim $XDG_CONFIG_HOME/awesome/rc.lua'
@@ -158,4 +159,8 @@ function dt {
 ldmv () {
   mv ~/Desktop/$(ls -tr ~/Desktop/ | tail -n1) $1
 }
+
+# Ripping a TV disk with titles
+# Titles in sequential order in a text file
+# for x in {2..13}; do ripit.sh $x $(($x+13))_$(head titles -n $(($x+13)) | tail -n 1); done
 

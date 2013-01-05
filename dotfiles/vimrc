@@ -106,7 +106,7 @@ function! RunIt()
   let has_main = system("find " . expand("%:h") . " -name 'main.lua' -maxdepth 1 | wc -l")
   let is_love = system("grep -i 'love.' " . expand("%") . " | wc -l")
   let is_moai = system("grep -i 'moai' " . expand("%") . " | wc -l")
-  let is_64 = system("uname -n | grep 'x86_64' | wc -l")
+  let is_64 = system("uname -a | grep 'x86_64' | wc -l")
   wall
   if base == 'lua' && has_main > 0
     if is_love > 0
@@ -128,6 +128,8 @@ function! RunIt()
     else
       !haxelib run nme test *.nmml neko
     endif
+  elseif base == 'lsp' || base == 'lisp'
+    !clisp %
   else
     !./%
   endif
@@ -211,6 +213,8 @@ nmap <Leader>n <esc>:call NumberingAlternate()<cr>i
 " Add line ending
 nnoremap ;; $a;<esc>
 inoremap ;; <esc>$a;<esc>
+nnoremap ,, $a,<esc>
+inoremap ,, <esc>$a,<esc>
 
 " Edit and Source vimrc
 nnoremap <leader>ve :vsplit $MYVIMRC<cr>
@@ -228,4 +232,9 @@ let g:ctrlp_custom_ignoe = {
 " For displaying invisibles, like tabs and eols
 nmap <leader>l :set list!<cr>
 set listchars=tab:¸\ ,eol:¬
+
+augroup filetype_haxe
+  autocmd!
+  autocmd FileType haxe iabbrev imp import nme.
+augroup END
 
