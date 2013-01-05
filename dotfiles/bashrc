@@ -39,6 +39,10 @@ alias pacr='sudo pacman -Rsn '
 alias pacu='sudo pacman -U '
 alias pacy='sudo pacman -Syu '
 
+# yaourt
+alias aurs='yaourt -Ss '
+alias auri='yaourt -S '
+
 # vim
 alias vimp='vim -p '
 alias vimrecover='find -iname "*.swp" -print -delete | sed -e "s/\/\./\//" -e "s/\.swp//" | xargs vim -p '
@@ -122,7 +126,7 @@ extractarchivedir() {
 }
 
 extractarchivedirname() {
-  extractarchivedir "$(echo $1 | cut -d. -f1)" "$1"
+  extractarchivedir "$(echo $1 | cut -d. -f1 | tr ' ' '_')" "$1"
 }
 
 # Use cdargs to move around
@@ -150,4 +154,8 @@ function dt {
   cd "`eval ~/dev/dateGoto.py $1 $2 $3 $4 $5 $6`"
 }
 
+# Move last downloaded to dir 
+ldmv () {
+  mv ~/Desktop/$(ls -tr ~/Desktop/ | tail -n1) $1
+}
 
