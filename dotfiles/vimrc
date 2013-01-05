@@ -233,3 +233,8 @@ let g:ctrlp_custom_ignoe = {
 nmap <leader>l :set list!<cr>
 set listchars=tab:¸\ ,eol:¬
 
+augroup filetype_haxe
+  autocmd!
+  autocmd FileType haxe iabbrev imp import nme.
+augroup END
+
