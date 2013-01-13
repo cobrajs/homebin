@@ -1,6 +1,10 @@
 #!/bin/bash
 
-DEVDIR="$HOME/dev"
+if [ ! $1 == "" ]; then
+  DEVDIR="$1"
+else
+  DEVDIR="$HOME/dev"
+fi
 
 FILETYPES="hx c h cpp py lua pl sh rb js html css"
 LEAVEOUTS=".git bin Export build DataTables* node_modules"
