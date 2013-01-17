@@ -238,3 +238,11 @@ augroup filetype_haxe
   autocmd FileType haxe iabbrev imp import nme.
 augroup END
 
+
+" Slime stuff
+let g:slime_target = "tmux"
+let g:slime_paste_file = "$HOME/.slime_paste"
+
+" Open Scratch split
+nnoremap <leader><tab> :Sscratch<cr>
+inoremap <leader><tab> <esc>:Sscratch<cr>
