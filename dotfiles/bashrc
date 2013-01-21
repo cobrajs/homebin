@@ -78,6 +78,8 @@ alias bashrce='vim ~/.bashrc'
 alias bashrcr='source ~/.bashrc'
 alias mex='chmod +x'
 alias show='sxiv'
+alias c='clear'
+alias r='reset'
 
 # Awesome
 alias rcluae='vim $XDG_CONFIG_HOME/awesome/rc.lua'

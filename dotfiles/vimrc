@@ -246,3 +246,6 @@ let g:slime_paste_file = "$HOME/.slime_paste"
 " Open Scratch split
 nnoremap <leader><tab> :Sscratch<cr>
 inoremap <leader><tab> <esc>:Sscratch<cr>
+
+" Open Ack search
+nnoremap ,a :Ack 

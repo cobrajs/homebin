@@ -47,6 +47,7 @@ beautiful.init("/usr/share/awesome/themes/zenburn/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt"
+terminal_big = terminal .. ' -fn "xft:Profont-11"'
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -59,6 +60,7 @@ modkey = "Mod1"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 layouts = {
+  awful.layout.suit.max,
   awful.layout.suit.tile,
   awful.layout.suit.tile.left,
   awful.layout.suit.tile.bottom,
@@ -68,7 +70,6 @@ layouts = {
   awful.layout.suit.fair.horizontal,
   awful.layout.suit.spiral,
   --awful.layout.suit.spiral.dwindle,
-  awful.layout.suit.max,
   awful.layout.suit.max.fullscreen,
   --awful.layout.suit.magnifier
 }
@@ -305,6 +306,7 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
+    awful.key({ modkey, "Shift"   }, "Return", function () awful.util.spawn(terminal_big) end),
     awful.key({ modkey, "Shift" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
@@ -341,10 +343,15 @@ globalkeys = awful.util.table.join(
     awful.key({}, "XF86AudioRaiseVolume",   function () awful.util.spawn("amixer sset Master 5%+") end),
     awful.key({}, "XF86AudioLowerVolume",   function () awful.util.spawn("amixer sset Master 5%-") end),
     awful.key({}, "XF86AudioMute",          function () awful.util.spawn("amixer sset Master toggle") end),
+
     -- Show the current scratchpad
     awful.key({modkey}, "`", function() scratchpad.toggle() end ),
     -- Turn on Rodentbane
-    awful.key({modkey}, "g", function() rodentbane.start() end)
+    awful.key({modkey}, "g", function() rodentbane.start() end),
+
+    -- Take a screenshot
+    awful.key({}, "Print", function() awful.util.spawn("scrot -s -e 'mv $n ~/screenshots/'") end)
+    awful.key({ modkey, "Shift"   }, "s", function() awful.util.spawn("scrot -s -e 'mv $n ~/screenshots/'") end)
 )
 
 clientkeys = awful.util.table.join(
