@@ -22,6 +22,8 @@ echo -ne "Uptime:";uptime
 
 HISTCONTROL=ignoreboth:ignorespace
 
+export EDITOR=vim
+
 # HAXE and NME stuff
 export HAXE_LIBRARY_PATH=/opt/haxe/std
 alias nme='haxelib run nme'
