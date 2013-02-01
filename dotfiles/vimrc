@@ -249,3 +249,7 @@ inoremap <leader><tab> <esc>:Sscratch<cr>
 
 " Open Ack search
 nnoremap ,a :Ack 
+
+" Cause, like, I always type this in wrong
+command W w
+command Q q!
