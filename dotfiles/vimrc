@@ -24,6 +24,14 @@ set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
+nnoremap / /\v
+vnoremap / /\v
+set ignorecase
+set smartcase
+set gdefault
+nnoremap <leader><space> :noh<cr>
+nnoremap <tab> %
+vnoremap <tab> %
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -253,3 +261,10 @@ nnoremap ,a :Ack
 " Cause, like, I always type this in wrong
 command W w
 command Q q!
+
+" Clear CtrlP Cache
+nnoremap <leader>cc :CtrlPClearCache<cr>
+inoremap <leader>cc <esc>:CtrlPClearCache<cr>
+
+" Write on losing focus
+au FocusLost * :wa
