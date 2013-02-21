@@ -189,3 +189,6 @@ ldmv () {
 # Titles in sequential order in a text file
 # for x in {2..13}; do ripit.sh $x $(($x+13))_$(head titles -n $(($x+13)) | tail -n 1); done
 
+export SDL_AUDIODRIVER=alsa
+export AUDIODEV=hw:0,0
+
