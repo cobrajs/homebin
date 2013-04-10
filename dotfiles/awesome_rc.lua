@@ -357,6 +357,9 @@ globalkeys = awful.util.table.join(
     awful.key({}, "XF86AudioLowerVolume",   function () awful.util.spawn("amixer sset Master 5%-") end),
     awful.key({}, "XF86AudioMute",          function () awful.util.spawn("amixer sset Master toggle") end),
 
+    --awful.key({}, "Super_L",                function () awful.util.spawn_with_shell("if [ $(cat /sys/devices/platform/thinkpad_acpi/hotkey_tablet_mode) -eq 1 ]; then /home/cobra/bin/dzen_buttons.sh; fi") end),
+    awful.key({}, "Super_L",                function () awful.util.spawn("/home/cobra/bin/dzen_buttons.sh") end),
+
     -- Show the current scratchpad
     awful.key({modkey}, "`", function() scratchpad.toggle() end ),
     -- Turn on Rodentbane

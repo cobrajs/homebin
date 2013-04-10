@@ -32,6 +32,7 @@ set gdefault
 nnoremap <leader><space> :noh<cr>
 nnoremap <tab> %
 vnoremap <tab> %
+set laststatus=2 " So powerline shows up
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -232,7 +233,7 @@ nnoremap <leader>vs :source $MYVIMRC<cr>
 inoremap jk <esc>
 
 " Custom ignore for CtrlP
-let g:ctrlp_custom_ignoe = {
+let g:ctrlp_custom_ignore = {
       \ 'dir' : '\v[\/]\.(git|hg|svn)',
       \ 'haxe' : '.*bin\/.*'
       \ }
@@ -268,3 +269,21 @@ inoremap <leader>cc <esc>:CtrlPClearCache<cr>
 
 " Write on losing focus
 au FocusLost * :wa
+
+" Switch to previous buffer 
+nnoremap <leader>e :b#<cr>
+
+" Toggle the NERD TREE
+nnoremap \t :NERDTreeToggle<cr>
+
+" Visual movement
+nnoremap j gj
+vnoremap j gj
+nnoremap k gk
+vnoremap k gk
+
+nnoremap <leader>db :diffthis<cr><c-w><c-w>:diffthis<cr>
+
+" Set noexpandtab for Makefiles
+au BufRead,BufNewFile Makefile set noexpandtab
+

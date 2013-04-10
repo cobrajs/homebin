@@ -192,3 +192,11 @@ ldmv () {
 export SDL_AUDIODRIVER=alsa
 export AUDIODEV=hw:0,0
 
+function haxelibzip {
+  if [ -z "$1" ] && [ -z "$2" ]; then
+    echo "Usage: haxelibzip <foldername> <version>"
+  else
+    find $1 -not -wholename '*.git*' -not -name '*~' -not -name '.*' | zip $1-$2.zip -@
+  fi
+}
+export PNDSDK="/home/cobra/pandora-dev/arm-2011.09"
