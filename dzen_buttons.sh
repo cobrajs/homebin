@@ -5,8 +5,8 @@ ARG1="$1"
 
 # Constants
 FNT="-*-profont-*-*-*-*-22-*-*-*-*-*-*-*"
-HEIGHT=200
-OFFSET=20
+HEIGHT=100
+OFFSET=10
 TEXT_WIDTH=11
 
 # Check to see if Mplayer is running
@@ -24,8 +24,11 @@ case "$ARG1" in
   mplayer)
     CONFIG="PAUSE:xdotool key --window $ACTIVE_WINDOW_ID 'space'\nKeyboard:^exit 27\n"
     ;;
+  awesomectrl)
+    CONFIG="LEFT:xdotool key 'alt+Left'\nRIGHT:xdotool key 'alt+Right'\nUP:xdotool key 'alt+k'\nDOWN:xdotool key 'alt+j'\n"
+    ;;
   *)
-    CONFIG="CMUS:^exit 28\nKeyboard:^exit 27\n"
+    CONFIG="CMUS:^exit 28\nWMCTRL:^exit 29\nXournal:^exit 30\nKeyboard:^exit 27\n"
     ;;
 esac 
 
@@ -63,7 +66,7 @@ while read BUTTON_LINE; do
 done < <(echo -e $CONFIG)
 
 echo $FINAL |
-/home/cobra/dev/git/forked/dzen/dzen2 -fn $FNT -h 200 -y $(( $SCREEN_HEIGHT - $HEIGHT)) -p 0 -e "button3=exit:2"
+/home/cobra/dev/git/forked/dzen/dzen2 -fn $FNT -h $HEIGHT -y $(( $SCREEN_HEIGHT - $HEIGHT)) -p 0 -e "button3=exit:2"
 
 case $? in
   27)
@@ -71,6 +74,12 @@ case $? in
     ;;
   28)
     $0 cmus &
+    ;;
+  29)
+    $0 awesomectrl &
+    ;;
+  30)
+    xournal ~/home.xoj &
     ;;
 esac
 

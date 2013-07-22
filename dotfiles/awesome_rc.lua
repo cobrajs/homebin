@@ -408,7 +408,12 @@ for i = 1, keynumber do
                   function ()
                         local screen = mouse.screen
                         if tags[screen][i] then
-                            awful.tag.viewonly(tags[screen][i])
+                            if awful.tag.selected(screen) == tags[screen][i] then
+                              awful.client.focus.byidx( 1)
+                              if client.focus then client.focus:raise() end
+                            else
+                              awful.tag.viewonly(tags[screen][i])
+                            end
                         end
                   end),
         awful.key({ modkey, "Control" }, "#" .. i + 9,

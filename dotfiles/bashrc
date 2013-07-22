@@ -41,7 +41,8 @@ HISTCONTROL=ignoreboth:ignorespace
 export EDITOR=vim
 
 # HAXE and NME stuff
-export HAXE_LIBRARY_PATH=/opt/haxe/std
+export HAXE_LIBRARY_PATH=/opt/haxe/std:.
+export HAXE_STD_PATH=/opt/haxe/std:.
 alias nme='haxelib run nme'
 
 # Make Ctrl+S work
@@ -103,6 +104,10 @@ alias mex='chmod +x'
 alias show='sxiv'
 alias c='clear'
 alias r='reset'
+
+# Mountng Stuff
+alias android-connect="mtpfs -o allow_other /media/android"
+alias android-disconnect="fusermount -u /media/android"
 
 # Awesome
 alias rcluae='vim $XDG_CONFIG_HOME/awesome/rc.lua'

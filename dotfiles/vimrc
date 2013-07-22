@@ -106,7 +106,7 @@ set switchbuf=useopen,usetab,newtab
 
 set autowrite
 
-command Love wall | !love .
+command! Love wall | !love .
 
 " Function for running whatever you're working on
 " Very awesome!
@@ -131,12 +131,8 @@ function! RunIt()
     !perl %
   elseif base == 'sh'
     !bash %
-  elseif base == 'hx'
-    if is_64 > 0
-      !haxelib run nme test *.nmml neko -64
-    else
-      !haxelib run nme test *.nmml neko
-    endif
+  elseif base == 'hx' || base == 'nmml'
+    !openfl test linux -neko
   elseif base == 'lsp' || base == 'lisp'
     !clisp %
   else
@@ -260,8 +256,8 @@ inoremap <leader><tab> <esc>:Sscratch<cr>
 nnoremap ,a :Ack 
 
 " Cause, like, I always type this in wrong
-command W w
-command Q q!
+command! W w
+command! Q q!
 
 " Clear CtrlP Cache
 nnoremap <leader>cc :CtrlPClearCache<cr>
@@ -274,7 +270,7 @@ au FocusLost * :wa
 nnoremap <leader>e :b#<cr>
 
 " Toggle the NERD TREE
-nnoremap \t :NERDTreeToggle<cr>
+nnoremap <leader>t :NERDTreeToggle<cr>
 
 " Visual movement
 nnoremap j gj
@@ -286,4 +282,14 @@ nnoremap <leader>db :diffthis<cr><c-w><c-w>:diffthis<cr>
 
 " Set noexpandtab for Makefiles
 au BufRead,BufNewFile Makefile set noexpandtab
+
+nnoremap <leader>m :make<cr>
+inoremap <leader>m <esc>:make<cr>
+
+" Swap x for y and width for height
+nnoremap <leader>xy :s/x/y/I<cr>:s/X/Y/I<cr>
+nnoremap <leader>yx :s/y/x/I<cr>:s/Y/X/I<cr>
+
+nnoremap <leader>wh :s/width/height/I<cr>:s/Width/Height/I<cr>
+nnoremap <leader>hw :s/height/width/I<cr>:s/Height/Width/I<cr>
 
