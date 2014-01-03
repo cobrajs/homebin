@@ -11,7 +11,7 @@ session_path=$(tmux list-panes -t $session_pre:1 -F "#{pane_start_path}")
 
 echo "project_name:" $(tmux display-message $session_name -p -F "#{session_name}")
 echo "project_root: $session_path" 
-echo "tabs:"
+echo "windows:"
 
 function get_command() {
   processes=$(ps h -o cmd -s $1 | grep -v "\-bash" | head -n1)

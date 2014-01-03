@@ -97,7 +97,7 @@ alias gitc='git commit -a -m "'
 alias gitd='git diff'
 
 # Various 
-alias pgrep='pgrep -l'
+alias pgrepl='pgrep -l'
 alias bashrce='vim ~/.bashrc'
 alias bashrcr='source ~/.bashrc'
 alias mex='chmod +x'
@@ -105,7 +105,7 @@ alias show='sxiv'
 alias c='clear'
 alias r='reset'
 
-# Mountng Stuff
+# Mounting Stuff
 alias android-connect="mtpfs -o allow_other /media/android"
 alias android-disconnect="fusermount -u /media/android"
 
@@ -117,6 +117,10 @@ alias lar='listarchive'
 alias xar='extractarchive'
 alias xard='extractarchivedir'
 alias xarn='extractarchivedirname'
+
+# Android Stuff
+ANDROID_SDK_PATH=/opt/Android\ SDK
+PATH=$PATH:$ANDROID_SDK_PATH/tools:$ANDROID_SDK_PATH/platform-tools
 
 # }}}
 
@@ -205,3 +209,33 @@ function haxelibzip {
   fi
 }
 export PNDSDK="/home/cobra/pandora-dev/arm-2011.09"
+
+
+#
+# Borrowed from: http://jeroenjanssens.com/2013/08/16/quickly-navigate-your-filesystem-from-the-command-line.html
+# Functions for jumping quickly
+#
+
+export MARKPATH=$HOME/.marks
+function jump {
+  cd -P $MARKPATH/$1 2>/dev/null || echo "No such mark: $1"
+}
+function mark {
+  mkdir -p $MARKPATH; ln -s $(pwd) $MARKPATH/$1
+}
+function unmark {
+  rm -i $MARKPATH/$1
+}
+function marks {
+  ls -l $MARKPATH | sed 's/  / /g' | cut -d' ' -f9- | sed 's/ -/\t-/g' && echo
+}
+# Bash autocomplete for jump
+# Thanks to: https://news.ycombinator.com/item?id=6229297
+function _jump {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local marks=$(find $MARKPATH -type l -printf "%f\n")
+  COMPREPLY=($(compgen -W '${marks[@]}' -- "$cur"))
+  return 0
+}
+complete -o default -o nospace -F _jump jump
+

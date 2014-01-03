@@ -17,8 +17,7 @@ fi
 
 while true; do
   change=$(inotifywait -q -r -e close_write,moved_to,create .)
-  #change=${change#./ * }
-  #echo $change
+  change=${change#./ * }
   if ( [[ $TEST == "nor" ]] && [[ "$change" == $1 ]] ) || ( [[ $TEST == "reg" ]] && [[ "$change" =~ $2 ]] ); then
     eval "$COMMAND"
     sleep 2s

@@ -16,9 +16,9 @@ URxvt*borderLess:				false
 URxvt*depth:					  32
 URxvt*background:				black
 URxvt*scrollBar_right:	false
-!URxvt*font:					    xft:DejaVu Sans Mono-9
-!URxvt*font:					    xft:Profont-9
-URxvt*font:					    xft:Dina-11
+!URxvt*font:					    xft:Profont-11
+URxvt*font:					    xft:Dina-9
+!URxvt*font:					    xft:terminus-11
 URxvt*cursorBlink:			false
 !URxvt*cursorUnderline:	true
 URxvt*scrollBar:        false

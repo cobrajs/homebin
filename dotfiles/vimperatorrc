@@ -45,4 +45,6 @@ noremap ll gt
 noremap J 10j
 noremap K 10k
 
+noremap <leader><space> :nohlsearch<cr>
+
 " vim: set ft=vimperator:

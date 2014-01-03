@@ -8,6 +8,8 @@ if v:progname =~? "evim"
   finish
 endif
 
+set shell=/bin/sh
+
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
@@ -112,7 +114,7 @@ command! Love wall | !love .
 " Very awesome!
 function! RunIt()
   let base = expand("%:e")
-  let has_main = system("find " . expand("%:h") . " -name 'main.lua' -maxdepth 1 | wc -l")
+  let has_main = system("find " . expand("%:h") . " -maxdepth 1 -name 'main.lua' | wc -l")
   let is_love = system("grep -i 'love.' " . expand("%") . " | wc -l")
   let is_moai = system("grep -i 'moai' " . expand("%") . " | wc -l")
   let is_64 = system("uname -a | grep 'x86_64' | wc -l")
@@ -176,16 +178,6 @@ filetype plugin on
 set ofu=syntaxcomplete#Complete
 
 "
-" NeoComplCache
-"
-let g:neocomplcache_enable_at_startup = 1
-
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.haxe = '\v([\]''"]|\w)(\.|\()'
-
-
 "
 " Make it easier to copy and paste stuff into vim
 "
@@ -270,7 +262,11 @@ au FocusLost * :wa
 nnoremap <leader>e :b#<cr>
 
 " Toggle the NERD TREE
-nnoremap <leader>t :NERDTreeToggle<cr>
+" Change back if vim-nerdtree-tabs isn't installed
+nnoremap <leader>t :NERDTreeMirrorToggle<cr>
+
+" Toggle the TagList
+nnoremap <leader>g :TlistToggle<cr>
 
 " Visual movement
 nnoremap j gj
@@ -292,4 +288,27 @@ nnoremap <leader>yx :s/y/x/I<cr>:s/Y/X/I<cr>
 
 nnoremap <leader>wh :s/width/height/I<cr>:s/Width/Height/I<cr>
 nnoremap <leader>hw :s/height/width/I<cr>:s/Height/Width/I<cr>
+
+
+" NeoComplete
+let g:neocomplete#enable_at_startup = 1
+
+" UltiSnips
+let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+
+"
+" Experimenting... shortcuts with spacebar
+"
+
+" Window movement
+nnoremap <space>l <C-w>l
+nnoremap <space>h <C-w>h
+nnoremap <space>j <C-w>j
+nnoremap <space>k <C-w>k
+
+" File related
+nnoremap <space>q :q<cr>
+nnoremap <space>w :w<cr>
 

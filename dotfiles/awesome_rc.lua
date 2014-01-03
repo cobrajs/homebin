@@ -111,8 +111,14 @@ for i, r in ipairs{"normal", "inverted", "left", "right"} do
 	table.insert(myrotationmenu, {r, "xrandr -o " .. r})
 end
 
+myoutputmenu = {
+  {"Enable HDMI1 to right" , "xrandr --output HDMI1 --auto --right-of LVDS1"},
+  {"Disable HDMI1" , "xrandr --output HDMI1 --off"}
+}
+
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
 																		{ "rotate", myrotationmenu },
+																		{ "output", myoutputmenu },
                                     { "open terminal", terminal }
                                   }
                         })
@@ -293,13 +299,21 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey,           }, "j",
         function ()
-            awful.client.focus.byidx( 1)
-            if client.focus then client.focus:raise() end
+            if #awful.client.tiled(mouse.screen) == 1 then
+              awful.screen.focus_relative(1)
+            else
+              awful.client.focus.byidx( 1)
+              if client.focus then client.focus:raise() end
+            end
         end),
     awful.key({ modkey,           }, "k",
         function ()
-            awful.client.focus.byidx(-1)
-            if client.focus then client.focus:raise() end
+            if #awful.client.tiled(mouse.screen) == 1 then
+                awful.screen.focus_relative(-1)
+            else
+                awful.client.focus.byidx(-1)
+                if client.focus then client.focus:raise() end
+            end
         end),
     awful.key({ modkey,           }, "w", function () mymainmenu:show({keygrabber=true}) end),
 
@@ -320,7 +334,7 @@ globalkeys = awful.util.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
     awful.key({ modkey, "Shift"   }, "Return", function () awful.util.spawn(terminal_big) end),
-    awful.key({ modkey, "Shift" }, "r", awesome.restart),
+    awful.key({ modkey, "Shift"   }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end),
