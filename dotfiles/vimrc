@@ -3,12 +3,67 @@
 set t_Co=256
 let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
 
-" When started as "evim", evim.vim will already have done these settings.
-if v:progname =~? "evim"
-  finish
+" auto-install vim-plug
+if empty(glob('~/.vim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall
 endif
 
-set shell=/bin/sh
+" ==============
+" vim-plug block
+" ==============
+
+call plug#begin()
+
+" fzf: fuzzy searching
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+nnoremap <C-p> :Files<cr>
+nnoremap <C-P> :GFiles<cr>
+
+" commentary: commenting out lines and stuff
+Plug 'tpope/vim-commentary'
+
+" deoplete: completion
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'roxma/nvim-yarp'
+" Plug 'roxma/vim-hug-neovim-rpc'
+" let g:deoplete#enable_at_startup = 1
+
+" ack: for searching in files
+Plug 'mileszs/ack.vim'
+if executable('ag')
+	let g:ackprg = 'ag --vimgrep'
+endif
+
+" nerdtree: file browsing and stuff
+Plug 'preservim/nerdtree'
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && v:this_session == "" | NERDTree | endif
+
+" Syntax Highlighting
+Plug 'sheerun/vim-polyglot'
+
+" Themes
+Plug 'mhartington/oceanic-next'
+Plug 'jnurmine/Zenburn'
+
+call plug#end()
+
+
+" Theme settings
+set t_Co=256
+if (has("termguicolors") && !&term =~# '^screen')
+	set termguicolors
+endif
+set background=dark
+
+" Colorscheme
+colorscheme OceanicNext
+
+let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
+
+set shell=/bin/bash
 
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
@@ -26,15 +81,22 @@ set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
+set textwidth=0
+
+" Magic search
 nnoremap / /\v
 vnoremap / /\v
+
 set ignorecase
 set smartcase
 set gdefault
+
+let mapleader=','
 nnoremap <leader><space> :noh<cr>
 nnoremap <tab> %
 vnoremap <tab> %
-set laststatus=2 " So powerline shows up
+" if using powerline, uncomment
+" set laststatus=2
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -91,22 +153,24 @@ let g:netrw_ftpextracmd = "passive"
 " Line numbers
 set number
 
+
+" Cursor line
+set cursorline
+
 au BufWinLeave *.* mkview
 au BufWinEnter *.* silent loadview
 
 map <F2> :NERDTreeToggle<CR>
-map <F3> :TlistToggle<CR>
+" map <F3> :TlistToggle<CR>
 
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplMapWindowNavArrows = 1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplModSelTarget = 1
-
-color zenburn
+" let g:miniBufExplMapWindowNavVim = 1
+" let g:miniBufExplMapWindowNavArrows = 1
+" let g:miniBufExplMapCTabSwitchBufs = 1
+" let g:miniBufExplModSelTarget = 1
 
 set switchbuf=useopen,usetab,newtab
 
-set autowrite
+" set autowrite
 
 command! Love wall | !love .
 
@@ -145,49 +209,8 @@ endfunction
 inoremap <Leader>r <esc>:call RunIt()<cr>
 nnoremap <Leader>r :call RunIt()<cr>
 
-function! CommentIt()
-  let line = getline('.')
-
-  if match(line, '\s*\(\\\{2}\|#\|-\{2}\)') > -1
-    let replacement = substitute(line, '\(\s*\)\(\\\{2}\|#\|-\{2}\)', '\1', '')
-  else
-    let base = expand("%:e")
-    if base == 'lua' || base == 'sql'
-      let comment = '--'
-    elseif base == 'py' || base == 'pl' || base == 'sh'
-      let comment = '#'
-    elseif base == 'c' || base == 'h' || base == 'cpp' || base == 'java' || base == 'js'
-      let comment = '//'
-    endif
-
-    let replacement = substitute(line, '\(\s*\)\(\S\)', '\1' . comment . '\2', '')
-  endif
-
-  call setline('.', replacement)
-endfunction
-
-inoremap ,c <esc>:call CommentIt()<cr>i
-nnoremap ,c :call CommentIt()<cr>
-
-" Stuff for Pathogen
-call pathogen#infect()
 filetype plugin indent on
-
 filetype plugin on
-
-set ofu=syntaxcomplete#Complete
-
-"
-"
-" Make it easier to copy and paste stuff into vim
-"
-
-nnoremap <leader>ya mzggVG"*y`z
-inoremap <leader>ya <esc>mzggVG"*y`z
-
-nnoremap <leader>pa ggVG"_d"*pgg"_dd
-inoremap <leader>pa <esc>ggVG"_d"*pgg"_dd
-
 
 nnoremap <c-s> :w<cr>
 inoremap <c-s> <esc>:w<cr>i
@@ -206,43 +229,22 @@ endfunction
 nmap <Leader>n :call NumberingAlternate()<cr>
 nmap <Leader>n <esc>:call NumberingAlternate()<cr>i
 
-"
-" Add line ending
-nnoremap ;; $a;<esc>
-inoremap ;; <esc>$a;<esc>
-nnoremap ,, $a,<esc>
-inoremap ,, <esc>$a,<esc>
-
 " Edit and Source vimrc
 nnoremap <leader>ve :vsplit $MYVIMRC<cr>
 nnoremap <leader>vs :source $MYVIMRC<cr>
 
-" Exit Insert mode
+" The best ever for exiting insert mode
 inoremap jk <esc>
 
 " Custom ignore for CtrlP
-let g:ctrlp_custom_ignore = {
-      \ 'dir' : '\v[\/]\.(git|hg|svn)',
-      \ 'haxe' : '.*bin\/.*'
-      \ }
+" let g:ctrlp_custom_ignore = {
+"       \ 'dir' : '\v[\/]\.(git|hg|svn)',
+"       \ 'haxe' : '.*bin\/.*'
+"       \ }
 
 " For displaying invisibles, like tabs and eols
 nmap <leader>l :set list!<cr>
 set listchars=tab:¸\ ,eol:¬
-
-augroup filetype_haxe
-  autocmd!
-  autocmd FileType haxe iabbrev imp import nme.
-augroup END
-
-
-" Slime stuff
-let g:slime_target = "tmux"
-let g:slime_paste_file = "$HOME/.slime_paste"
-
-" Open Scratch split
-nnoremap <leader><tab> :Sscratch<cr>
-inoremap <leader><tab> <esc>:Sscratch<cr>
 
 " Open Ack search
 nnoremap ,a :Ack 
@@ -256,17 +258,17 @@ nnoremap <leader>cc :CtrlPClearCache<cr>
 inoremap <leader>cc <esc>:CtrlPClearCache<cr>
 
 " Write on losing focus
-au FocusLost * :wa
+" au FocusLost * :wa
 
 " Switch to previous buffer 
 nnoremap <leader>e :b#<cr>
-
-" Toggle the NERD TREE
-" Change back if vim-nerdtree-tabs isn't installed
-nnoremap <leader>t :NERDTreeMirrorToggle<cr>
-
-" Toggle the TagList
+nnoremap <leader>t :NERDTreeToggle<cr>
 nnoremap <leader>g :TlistToggle<cr>
+nnoremap <leader>b :ls<cr>:b
+nnoremap <leader>n :nohl<cr>
+
+nnoremap H gT
+nnoremap L gt
 
 " Visual movement
 nnoremap j gj
@@ -291,12 +293,12 @@ nnoremap <leader>hw :s/height/width/I<cr>:s/Height/Width/I<cr>
 
 
 " NeoComplete
-let g:neocomplete#enable_at_startup = 1
+" let g:neocomplete#enable_at_startup = 1
 
 " UltiSnips
-let g:UltiSnipsExpandTrigger="<c-j>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+" let g:UltiSnipsExpandTrigger="<c-j>"
+" let g:UltiSnipsJumpForwardTrigger="<c-j>"
+" let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 "
 " Experimenting... shortcuts with spacebar
@@ -311,4 +313,14 @@ nnoremap <space>k <C-w>k
 " File related
 nnoremap <space>q :q<cr>
 nnoremap <space>w :w<cr>
+
+" Backup stuff
+set backup
+set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set backupskip=/tmp/*
+set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set writebackup
+
+set statusline=%-5.4n%t%h%m%r%w%=(x%b,\ L%l,\ C%c%V,\ %<%P)
+
 
