@@ -17,16 +17,19 @@ URxvt*depth:					  32
 URxvt*background:				black
 URxvt*scrollBar_right:	false
 !URxvt*font:					    xft:Profont-11
-URxvt*font:					    xft:Dina-9
-!URxvt*font:					    xft:terminus-11
+!URxvt*font:					    xft:Dina-12
+URxvt*font:					    xft:xos4 Terminus:pixelsize=14:antialias=false
 URxvt*cursorBlink:			false
 !URxvt*cursorUnderline:	true
 URxvt*scrollBar:        false
-URxvt*perl-ext-common:	default,clipboard
+URxvt*perl-ext-common:	default,clipboard,font-size
 URxvt*saveLines:        1024
-!URxvt*transparent:      true
+URxvt*transparent:      true
 !URxvt*fading:           40
-!URxvt*shading:          10
+URxvt*shading:          10
+
+URxvt*keysym.C-Up:     perl:font-size:increase
+URxvt*keysym.C-Down:   perl:font-size:decrease
 
 ! Zenburn color-scheme
 urxvt*background:  #3f3f3f

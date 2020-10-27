@@ -40,6 +40,10 @@ full = (width * (position / 100.0))
 status = {'playing':'>', 'paused':'=', 'stopped':'_'}[data_dict['status']]
 # ^bg(#339944)^fg(black) %s ^bg() 
 #print("^fg(#55FF66)(%s - %s) ^fg(#339944) ^r(%ix%i)^ro(%ix%i) %s %s%%" % (data_dict['artist'], data_dict['title'], full, height-3,  width-full, height, status, position)) 
-print("(%s - %s) %s %s%%" % (data_dict['artist'], data_dict['title'], status, position)) 
+
+title = data_dict['title'].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+artist = data_dict['artist'].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+print("(<i>%s - %s</i>) %s %s%%" % (artist, title, status, position))
 #print('ARTIST="%s" TITLE="%s" STATUS="%s" LEFT="%s"' % (data_dict['artist'].replace("[","").replace("]",""), data_dict['title'].replace("[","").replace("]",""), status, position)) 
 

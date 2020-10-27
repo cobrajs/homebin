@@ -33,7 +33,7 @@ PATH=$PATH:$HOME/bin:$HOME/bin/games
 eval "`dircolors -b`"
 
 echo -ne "Today is "; date
-echo -e ""; cal;
+#echo -e ""; cal;
 echo -ne "Uptime:";uptime 
 
 HISTCONTROL=ignoreboth:ignorespace
@@ -119,7 +119,7 @@ alias xard='extractarchivedir'
 alias xarn='extractarchivedirname'
 
 # Android Stuff
-ANDROID_SDK_PATH=/opt/Android\ SDK
+ANDROID_SDK_PATH=/opt/android-sdk
 PATH=$PATH:$ANDROID_SDK_PATH/tools:$ANDROID_SDK_PATH/platform-tools
 
 # }}}
@@ -238,4 +238,35 @@ function _jump {
   return 0
 }
 complete -o default -o nospace -F _jump jump
+
+export CLASSPATH=/home/cobra/AtomicScala/examples:$CLASSPATH
+
+#wget -r -p -l 2 --no-parent -k http://demos.jquerymobile.com/1.4.5/
+
+function fontdina {
+  printf '\33]50;%s\007' "xft:Dina:pixelsize=$1"
+}
+
+function fontpro {
+  printf '\33]50;%s\007' "xft:Profont:pixelsize=$1"
+}
+
+function fontterm {
+  printf '\33]50;%s\007' "xft:Terminus:pixelsize=$1"
+}
+
+PATH=$PATH:$HOME/.gem/ruby/2.2.0/bin
+
+
+function pattach {
+  SESSION=$(tmux ls | percol | cut -d : -f 1)
+  [ $? -ne 0 ] && return
+  if [[ -n "$SESSION" ]]; then
+    tmux att -t $SESSION
+  fi
+}
+
+alias tmux="TERM=screen-256color-bce tmux"
+alias pgrep="pgrep -a"
+
 

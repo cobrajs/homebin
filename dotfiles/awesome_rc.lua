@@ -13,10 +13,14 @@ local menubar = require("menubar")
 -- Vicious widgets
 local vicious = require("vicious")
 
-local rodentbane = require("rodentbane")
-local scratchpad = require("scratchpad")
+local alttab = require("alttab")
 
 local sizing = 24
+
+-- {{{ Alttab settings }}}
+alttab.settings.preview_box_fps = 5
+alttab.settings.preview_box_bg = "#dddddd00"
+alttab.settings.preview_box_delay = 300
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -51,7 +55,7 @@ end
 beautiful.init("/usr/share/awesome/themes/zenburn/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvt"
+terminal = "termite"
 terminal_big = terminal .. ' -fn "xft:Profont-11"'
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
@@ -93,7 +97,9 @@ end
 tags = {}
 for s = 1, screen.count() do
   -- Each screen has its own tag table.
-  tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
+  --tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
+  -- Alternative method
+  tags[s] = awful.tag({ 'A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5' }, s, layouts[1])
 end
 -- }}}
 
@@ -112,7 +118,7 @@ for i, r in ipairs{"normal", "inverted", "left", "right"} do
 end
 
 myoutputmenu = {
-  {"Enable HDMI1 to right" , "xrandr --output HDMI1 --auto --right-of LVDS1"},
+  {"Enable HDMI1 to right" , "xrandr --output HDMI1 --auto --right-of eDP1"},
   {"Disable HDMI1" , "xrandr --output HDMI1 --off"}
 }
 
@@ -142,6 +148,26 @@ mytextclock:buttons(awful.util.table.join(
     })
   end)
 ))
+
+-- Text shower
+mytextoutput = wibox.widget.textbox()
+mytextoutput:set_markup( '<span color="white" size="small" stretch="condensed"> Music \n Power </span>' )
+--[[
+vicious.register(mytextoutput, vicious.widgets.volume,
+  function(widget, args)
+    return " " .. args[1] .. "% "
+  end, 2, "Master")
+--]]
+
+-- Volume shower
+myvollabel = wibox.widget.imagebox()
+myvollabel:set_image("/home/cobra/.config/awesome/icons/trans/vol-hi.png")
+myvolwidget = wibox.widget.textbox()
+vicious.register(myvolwidget, vicious.widgets.volume,
+  function(widget, args)
+    return " " .. args[1] .. "% "
+  end, 2, "Master")
+
 -- Memory tracking widget
 mymemlabel = wibox.widget.imagebox()
 mymemlabel:set_image("/home/cobra/.config/awesome/icons/trans/mem.png")
@@ -262,6 +288,9 @@ for s = 1, screen.count() do
 
   -- Widgets that are aligned to the right
   local right_layout = wibox.layout.fixed.horizontal()
+  right_layout:add(mytextoutput)
+  right_layout:add(myvollabel)
+  right_layout:add(myvolwidget)
   right_layout:add(mymemlabel)
   right_layout:add(mymemwidget)
   right_layout:add(mybatterylabel)
@@ -293,9 +322,17 @@ root.buttons(awful.util.table.join(
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
+    awful.key({ modkey, "Shift"   }, "Left",   awful.tag.viewprev       ),
+    awful.key({ modkey, "Shift"   }, "Right",  awful.tag.viewnext       ),
+    awful.key({ modkey,           }, "`",      awful.tag.history.restore),
+    awful.key({ modkey,           }, "Tab", 
+        function ()
+          alttab.switch(1, "Alt_L", "Tab", "ISO_Left_Tab")
+        end),
+    awful.key({ modkey, "Shift"   }, "Tab", 
+        function ()
+          alttab.switch(-1, "Alt_L", "Tab", "ISO_Left_Tab")
+        end),
 
     awful.key({ modkey,           }, "j",
         function ()
@@ -315,6 +352,7 @@ globalkeys = awful.util.table.join(
                 if client.focus then client.focus:raise() end
             end
         end),
+    awful.key({ modkey,           }, ";", function () awful.screen.focus_relative(1) end),
     awful.key({ modkey,           }, "w", function () mymainmenu:show({keygrabber=true}) end),
 
     -- Layout manipulation
@@ -323,7 +361,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
     awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto),
-    awful.key({ modkey,           }, "Tab",
+    awful.key({ modkey,           }, "Escape",
         function ()
             awful.client.focus.history.previous()
             if client.focus then
@@ -333,7 +371,6 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-    awful.key({ modkey, "Shift"   }, "Return", function () awful.util.spawn(terminal_big) end),
     awful.key({ modkey, "Shift"   }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
@@ -349,7 +386,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
 
     -- Prompt
-    awful.key({ modkey },            "p",     function () mypromptbox[mouse.screen]:run() end),
+    awful.key({ modkey },            "p",     function () awful.screen.focused().mypromptbox:run() end,
+              {description = "run prompt", group = "launcher"}),
 
     awful.key({ modkey }, "x",
               function ()
@@ -371,17 +409,13 @@ globalkeys = awful.util.table.join(
     awful.key({}, "XF86AudioLowerVolume",   function () awful.util.spawn("amixer sset Master 5%-") end),
     awful.key({}, "XF86AudioMute",          function () awful.util.spawn("amixer sset Master toggle") end),
 
-    --awful.key({}, "Super_L",                function () awful.util.spawn_with_shell("if [ $(cat /sys/devices/platform/thinkpad_acpi/hotkey_tablet_mode) -eq 1 ]; then /home/cobra/bin/dzen_buttons.sh; fi") end),
-    awful.key({}, "Super_L",                function () awful.util.spawn("/home/cobra/bin/dzen_buttons.sh") end),
-
-    -- Show the current scratchpad
-    awful.key({modkey}, "`", function() scratchpad.toggle() end ),
-    -- Turn on Rodentbane
-    awful.key({modkey}, "g", function() rodentbane.start() end),
+    awful.key({}, "XF86MonBrightnessDown",  function () awful.util.spawn("/home/cobra/bin/brightness -dec 7") end),
+    awful.key({}, "XF86MonBrightnessUp",    function () awful.util.spawn("/home/cobra/bin/brightness -inc 7") end),
+    awful.key({}, "XF86LaunchA",            function () awful.util.spawn("/home/cobra/bin/screen_out.sh") end),
 
     -- Take a screenshot
-    awful.key({}, "Print", function() awful.util.spawn("scrot -s -e 'mv $n ~/screenshots/'") end),
-    awful.key({ modkey, "Shift"   }, "s", function() awful.util.spawn("scrot -s -e 'mv $n ~/screenshots/'") end)
+    awful.key({}, "Print", function() awful.util.spawn("scrot -e 'mv $n ~/screenshots/'") end),
+    awful.key({ modkey, "Shift"   }, "s", function() awful.util.spawn("scrot -e 'mv $n ~/screenshots/'") end)
 )
 
 clientkeys = awful.util.table.join(
@@ -390,6 +424,23 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
+    awful.key({ modkey, "Shift"   }, "o",      function (c) 
+                                                 local tag = c:tags()[1].name
+                                                 local useTag = nil
+                                                 if tag then
+                                                   local head = tag:sub(1,1)
+                                                   local num = tag:sub(2,2)
+                                                   if head == 'A' then
+                                                     useTag = 5
+                                                   else
+                                                     useTag = 0
+                                                   end
+                                                   naughty.notify({text = tags[client.focus.screen][useTag + num], timeout = 5})
+                                                   if useTag then
+                                                     awful.client.movetotag(tags[client.focus.screen][useTag + num])
+                                                   end
+                                                 end
+                                               end),
     awful.key({ modkey, "Shift"   }, "r",      function (c) c:redraw()                       end),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
     awful.key({ modkey,           }, "n",
@@ -407,6 +458,56 @@ clientkeys = awful.util.table.join(
     awful.key({modkey, "Shift"}, "`", function(c) scratchpad.set(c, 0.5, 0.5) end )
 )
 
+function genSwitchFunc(mod, i)
+  return function()
+    local screen = awful.screen.focused()
+    local tag = screen.tags[mod + i]
+    if tag then
+      tag:view_only()
+      --[[
+      if awful.tag.selected(screen) == tags[screen][tag] then
+        awful.client.focus.byidx(1)
+        if client.focus then client.focus:raise() end
+      else
+        tag:view_only()
+      end
+      --]]
+    end
+  end
+end
+
+function genMoveFunc(mod, i)
+  return function()
+    local tag = mod + i
+    if client.focus and tags[client.focus.screen][tag] then
+      awful.client.movetotag(tags[client.focus.screen][tag])
+    end
+  end
+end
+
+keynumber = 5
+for i = 1, keynumber do
+  globalkeys = awful.util.table.join(globalkeys,
+    -- Assign 'A' set
+    awful.key({ modkey }, "#" .. i + 9, genSwitchFunc(0, i)),
+    -- Assign 'B' set
+    awful.key({ modkey, "Shift" }, "#" .. i + 9, genSwitchFunc(5, i)),
+
+    awful.key({ modkey, "Control" }, "#" .. i + 9, function()
+      local currentTag = awful.tag.selected(client.focus.screen).name
+      local head = currentTag:sub(1,1)
+      local addIn = 0
+      if head == 'B' then
+        addIn = 5
+      end
+      if client.focus and tags[client.focus.screen][addIn + i] then
+        awful.client.movetotag(tags[client.focus.screen][addIn + i])
+      end
+    end)
+  )
+end
+
+--[[
 -- Compute the maximum number of digit we need, limited to 9
 keynumber = 0
 for s = 1, screen.count() do
@@ -451,6 +552,8 @@ for i = 1, keynumber do
                   end))
 end
 
+--]]
+
 clientbuttons = awful.util.table.join(
     awful.button({ }, 1, function (c) client.focus = c; c:raise() end),
     awful.button({ modkey }, 1, awful.mouse.client.move),
@@ -466,6 +569,7 @@ awful.rules.rules = {
     { rule = { },
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
+                     size_hints_honor = false,
                      focus = true,
                      keys = clientkeys,
                      buttons = clientbuttons } },
@@ -476,13 +580,8 @@ awful.rules.rules = {
     -- Set Firefox to always map on tags number 2 of screen 1.
     { rule = { class = "Firefox" },
       properties = { tag = tags[1][2], floating = false } },
-    -- Setup Default stuff to run in the first desktop
-    { rule = { class = "URxvt", name = "htop" },
-      properties = { tag = tags[1][1] } },
-    { rule = { class = "URxvt", name = "wicd" },
-      properties = { tag = tags[1][1] } },
-    { rule = { class = "URxvt", name = "cmus" },
-      properties = { tag = tags[1][1] } },
+    { rule = { class = "processing-core-PApplet" },
+      properties = { floating = true } },
 }
 -- }}}
 
@@ -560,9 +659,7 @@ end
 local commands = {
   {"normal", "urxvt -title 'wicd' -e 'wicd-curses'"},
   {"normal", "urxvt -title 'cmus' -e 'cmus'"},
-  {"normal", "urxvt -title 'htop' -e 'htop'"},
-  {"once", "onboard"},
-  {"once", "firefox"}
+  {"normal", "urxvt -title 'htop' -e 'htop'"}
 }
 
 for _, i in ipairs(commands) do

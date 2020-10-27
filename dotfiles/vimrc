@@ -1,6 +1,72 @@
 " A Custom ViM file for me
+" call pathogen#infect()
 "
+
+"
+" auto-install vim-plug
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall
+endif
+
+"
+" ===========================
+" vim-plug block
+" ===========================
+call plug#begin()
+
+" Plugins 
+
+" fzf: fuzzy searching
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+nnoremap <C-p> :Files<cr>
+nnoremap <C-P> :GFiles<cr>
+
+" commentary: commenting lines and stuff
+Plug 'tpope/vim-commentary'
+
+" deoplete: completion
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+let g:deoplete#enable_at_startup = 1
+
+" ack: for searching in files
+Plug 'mileszs/ack.vim'
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
+" nerdtree: file browsing and stuff
+Plug 'preservim/nerdtree'
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && v:this_session == "" | NERDTree | endif
+
+" Syntax Highlighting
+" Plug 'othree/yajs'
+" Plug 'othree/html5'
+Plug 'sheerun/vim-polyglot'
+
+" Themes
+Plug 'mhartington/oceanic-next'
+Plug 'jnurmine/Zenburn'
+
+call plug#end()
+
+
+
+" Theme settings 
 set t_Co=256
+if (has("termguicolors") && !&term =~# '^screen')
+  set termguicolors
+endif
+set background=dark
+
+" color zenburn
+colorscheme OceanicNext
+
+
 let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
 
 " auto-install vim-plug
@@ -66,7 +132,7 @@ let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
 set shell=/bin/bash
 
 " Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
+" This must be first, because it changes other options as a side effect
 set nocompatible
 
 " allow backspacing over everything in insert mode
@@ -121,9 +187,6 @@ if has("autocmd")
   augroup vimrcEx
   au!
 
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
@@ -153,7 +216,6 @@ let g:netrw_ftpextracmd = "passive"
 " Line numbers
 set number
 
-
 " Cursor line
 set cursorline
 
@@ -182,12 +244,13 @@ function! RunIt()
   let is_love = system("grep -i 'love.' " . expand("%") . " | wc -l")
   let is_moai = system("grep -i 'moai' " . expand("%") . " | wc -l")
   let is_64 = system("uname -a | grep 'x86_64' | wc -l")
+  let is_cargo = system("find " . expand("%:p:h:h") . " -maxdepth 1 -name 'Cargo.toml' | wc -l")
   wall
   if base == 'lua' && has_main > 0
     if is_love > 0
       !love %:h
     elseif is_moai > 0
-      !/home/cobra/dev/moai-dev/build/moai/moai /home/cobra/dev/moai-dev/samples/config/config.lua %:h/main.lua
+      !moai %:h/main.lua
     endif
   elseif base == 'lua' && ! has_main > 0
     !lua %
@@ -198,9 +261,17 @@ function! RunIt()
   elseif base == 'sh'
     !bash %
   elseif base == 'hx' || base == 'nmml'
-    !openfl test linux -neko
+    !lime test neko -debug
   elseif base == 'lsp' || base == 'lisp'
     !clisp %
+  elseif base == 'scala'
+    !scala -classpath ~/AtomicScala/examples/ %
+  elseif base == 'pde'
+    !processing-java --sketch=%:h --output=/home/cobra/tmp/processing-output --force --run
+  elseif base == 'nim'
+    !nim c -r %
+  elseif is_cargo > 0 
+    !cargo run
   else
     !./%
   endif
@@ -237,17 +308,13 @@ nnoremap <leader>vs :source $MYVIMRC<cr>
 inoremap jk <esc>
 
 " Custom ignore for CtrlP
-" let g:ctrlp_custom_ignore = {
-"       \ 'dir' : '\v[\/]\.(git|hg|svn)',
-"       \ 'haxe' : '.*bin\/.*'
-"       \ }
 
 " For displaying invisibles, like tabs and eols
 nmap <leader>l :set list!<cr>
 set listchars=tab:¸\ ,eol:¬
 
 " Open Ack search
-nnoremap ,a :Ack 
+nnoremap <leader>a :Ack 
 
 " Cause, like, I always type this in wrong
 command! W w
@@ -262,11 +329,19 @@ inoremap <leader>cc <esc>:CtrlPClearCache<cr>
 
 " Switch to previous buffer 
 nnoremap <leader>e :b#<cr>
+
+" Toggle the NERD TREE
 nnoremap <leader>t :NERDTreeToggle<cr>
+
+" Toggle the TagList
 nnoremap <leader>g :TlistToggle<cr>
 nnoremap <leader>b :ls<cr>:b
 nnoremap <leader>n :nohl<cr>
 
+nnoremap H gT
+nnoremap L gt
+
+" Fast Tab Nav and Movement
 nnoremap H gT
 nnoremap L gt
 
@@ -321,6 +396,34 @@ set backupskip=/tmp/*
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set writebackup
 
+"
+" Suuuper dope statusline
 set statusline=%-5.4n%t%h%m%r%w%=(x%b,\ L%l,\ C%c%V,\ %<%P)
+
+"
+" Ignores for CtrlP
+"
+if exists("g:ctrlp_user_command")
+  unlet g:ctrlp_user_command
+endif
+set wildignore+=*/vendor/*
+set wildignore+=*/node_modules/*
+set wildignore+=*/build/*
+set wildignore+=*/plugins/*
+set wildignore+=*/platforms/*
+set wildignore+=*/bin/*
+
+"
+" JSON reformatter
+command! FormatJSON %!python -m json.tool
+nnoremap <leader>js :FormatJSON<cr>
+
+" Search for selection
+vnoremap // y/<C-R>"<CR>
+
+set sessionoptions=blank,buffers,curdir,folds,help,tabpages,winsize
+
+" Supposedly helps Vim with Kitty
+let &t_ut=''
 
 

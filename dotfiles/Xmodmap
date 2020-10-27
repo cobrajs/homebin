@@ -4,6 +4,9 @@ keycode 123 = XF86AudioRaiseVolume
 keycode 223 = XF86Standby
 keycode 210 = XF86Display
 
+keysym XF86Explorer = F12
+
 remove Lock = Caps_Lock
 keysym Caps_Lock = Control_L
 add Control = Control_L
+

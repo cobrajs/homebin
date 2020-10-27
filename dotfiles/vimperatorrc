@@ -1,4 +1,4 @@
-"3.5 (created: 2012/08/04 00:41:20)
+"3.8.2 (created: 2014/02/13 23:52:43)
 
 highlight Bell border: 0 none; background-color: black;
 highlight Boolean color: #CC9393;
@@ -33,18 +33,17 @@ highlight Tag color: #94BFF3;
 highlight Title color: #ACBC90; background: #3F3F3F; font-weight: bold;
 highlight URL text-decoration: none; color: #9ECE9E; background: inherit;
 highlight WarningMsg color: #CC9393; background: #3F3F3F;
+noremap hh gT
+noremap ll gt
+noremap J 10j
+noremap K 10k
+noremap "\\<Space>" :nohlsearch<Return>
+map d <nop>
+map ds <C-w>
 set noautocomplete
 style! -name=statusbar chrome://* <<EOF
 #liberator-statusline { font-family: terminus ! important; }
 EOF
 source! /home/cobra/.vimperatorrc.local
-
-" For easier movement and tab switching
-noremap hh gT
-noremap ll gt
-noremap J 10j
-noremap K 10k
-
-noremap <leader><space> :nohlsearch<cr>
 
 " vim: set ft=vimperator:

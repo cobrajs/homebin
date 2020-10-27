@@ -1,0 +1,25 @@
+#!/bin/bash
+
+BRIGHTNESS_DIR=/sys/class/backlight/intel_backlight/
+MAX_BRIGHTNESS=$(cat $BRIGHTNESS_DIR/max_brightness)
+BRIGHTNESS=$(cat $BRIGHTNESS_DIR/brightness)
+BRIGHTNESS_STEPS=$(( $MAX_BRIGHTNESS / 100 ))
+
+echo $BRIGHTNESS / $MAX_BRIGHTNESS / $BRIGHTNESS_STEPS
+if [[ "$1" = "-set" ]]; then
+  NEW_BRIGHTNESS=$2
+  sudo $HOME/bin/set_brightness.sh $NEW_BRIGHTNESS
+elif [[ "$1" = "-inc" ]]; then
+  NEW_BRIGHTNESS=$(( $BRIGHTNESS + ( $BRIGHTNESS_STEPS * $2 ) ))
+  if [[ $NEW_BRIGHTNESS -gt $MAX_BRIGHTNESS ]]; then
+    NEW_BRIGHTNESS=$MAX_BRIGHTNESS
+  fi
+  sudo $HOME/bin/set_brightness.sh $NEW_BRIGHTNESS
+elif [[ "$1" = "-dec" ]]; then
+  NEW_BRIGHTNESS=$(( $BRIGHTNESS - ( $BRIGHTNESS_STEPS * $2 ) ))
+  if [[ $NEW_BRIGHTNESS -lt 1 ]]; then
+    NEW_BRIGHTNESS=1
+  fi
+  sudo $HOME/bin/set_brightness.sh $NEW_BRIGHTNESS
+fi
+echo "Old brightness: $BRIGHTNESS; new brightness: $NEW_BRIGHTNESS"
