@@ -16,8 +16,11 @@ set $mod Mod1
 # How's it gonna look??
 #
 
-gaps inner 6
+gaps inner 3
 gaps outer 3
+smart_borders on
+smart_gaps on
+
 
 # Pull colors from Xresources
 set_from_resource $darkred     color1 #000000
@@ -61,7 +64,7 @@ set $font "FiraCode Nerd Font Mono Medium 12"
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-# font pango:Inconsolata Regular 14
+#font pango:Inconsolata Regular 14
 # font pango:VictorMono Nerd Font Medium 12
 font pango:FiraCode Nerd Font Mono Medium 12
 # font pango:monospace 12
@@ -71,9 +74,6 @@ default_border pixel 2
 default_floating_border normal
 
 hide_edge_borders smart
-
-# Switch to previous workspace when hitting same one
-workspace_auto_back_and_forth yes
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -105,6 +105,15 @@ bindsym $mod+p exec rofi -show drun -font $font
 # Launch rofi in window picking mode
 bindsym $mod+Tab exec rofi -show window -font $font
 
+
+# Some launchers
+bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
+bindsym Print exec --no-startup-id i3-scrot
+bindsym $mod+Print --release exec --no-startup-id i3-scrot -w
+bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
+bindsym $mod+Shift+Ctrl+h exec xdg-open /usr/share/doc/manjaro/i3_help.pdf
+bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
+
 # change focus
 bindsym $mod+h focus left
 bindsym $mod+j focus down
@@ -131,9 +140,10 @@ bindsym $mod+Shift+l move right
 
 # Changed to be more like tmux
 # split in horizontal orientation
-bindsym $mod+bar split h
+bindsym $mod+bar split h;exec notify-send 'tile horizontally'
 # split in vertical orientation
-bindsym $mod+minus split v
+bindsym $mod+minus split v;exec notify-send 'tile vertically'
+bindsym $mod+q split toggle
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -153,13 +163,26 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 bindsym $mod+shift+a focus child
 
+# toggle sticky
+bindsym $mod+Shift+s sticky toggle
+
 # focus the child container
 #bindsym $mod+d focus child
 
+# workspace back and forth (with/without active container)
+workspace_auto_back_and_forth yes
+bindsym $mod+b workspace back_and_forth
+bindsym $mod+Shift+b move container to workspace back_and_forth; workspace back_and_forth
 
 # Scratchpad stuff
 bindsym $mod+Shift+grave move scratchpad
 bindsym $mod+grave scratchpad show
+
+# Audio and music control
+bindsym $mod+Ctrl+c exec cmus-remote -u
+bindsym $mod+Ctrl+v exec cmus-remote -s
+bindsym $mod+Ctrl+z exec cmus-remote -r
+bindsym $mod+Ctrl+b exec cmus-remote -n
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -172,7 +195,6 @@ set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
-set $ws10 "10"
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -184,7 +206,6 @@ bindsym $mod+6 workspace $ws6
 bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
-bindsym $mod+0 workspace $ws10
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $ws1
@@ -196,7 +217,6 @@ bindsym $mod+Shift+6 move container to workspace $ws6
 bindsym $mod+Shift+7 move container to workspace $ws7
 bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
-bindsym $mod+Shift+0 move container to workspace $ws10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -204,6 +224,27 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+
+# Set shut down, restart and locking features
+bindsym $mod+0 mode "$mode_system"
+set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
+mode "$mode_system" {
+    bindsym l exec --no-startup-id i3exit lock, mode "default"
+    bindsym s exec --no-startup-id i3exit suspend, mode "default"
+    bindsym u exec --no-startup-id i3exit switch_user, mode "default"
+    bindsym e exec --no-startup-id i3exit logout, mode "default"
+    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
+    bindsym r exec --no-startup-id i3exit reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
+
+    # exit system mode: "Enter" or "Escape"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# Lock screen
+# bindsym $mod+9 exec --no-startup-id blurlock
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -232,26 +273,6 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-bar {
-  #font pango:Font Awesome 5 Free Regular 11
-  #font pango:Axaxax Bold 12
-  # font pango:VictorMono Nerd Font Medium 12
-  status_command i3blocks
-  position top
-  
-  # mode hide
-  
-  colors {
-    background $bg
-    statusline $fg
-    separator  $fg-alt
-    
-    focused_workspace $bg $fg-alt $bg
-    inactive_workspace $bg $bg $fg
-  }
-}
 
 #exec --no-startup-id /usr/lib/gnome-settings-daemon-3.0/gsd-xsettings
 #exec_always --no-startup-id gnome-power-manager
@@ -262,16 +283,102 @@ bar {
 for_window [class="Pavucontrol" instance="pavucontrol"] floating enable
 for_window [class="mate-control-center" instance="mate-control-center"] floating enable
 for_window [class="Gnome-calendar" instance="gnome-calendar"] floating enable
+for_window [title="alsamixer"] floating enable border pixel 1
+for_window [class="calamares"] floating enable border normal
+for_window [class="Clipgrab"] floating enable
+for_window [title="File Transfer*"] floating enable
+for_window [class="fpakman"] floating enable
+for_window [class="Galculator"] floating enable border pixel 1
+for_window [class="GParted"] floating enable border normal
+for_window [title="i3_help"] floating enable sticky enable border normal
+for_window [class="Lightdm-settings"] floating enable
+for_window [class="Lxappearance"] floating enable sticky enable border normal
+for_window [class="Manjaro-hello"] floating enable
+for_window [class="Manjaro Settings Manager"] floating enable border normal
+for_window [title="MuseScore: Play Panel"] floating enable
+for_window [class="Nitrogen"] floating enable sticky enable border normal
+for_window [class="Oblogout"] fullscreen enable
+for_window [class="octopi"] floating enable
+for_window [title="About Pale Moon"] floating enable
+for_window [class="Pamac-manager"] floating enable
+for_window [class="Pavucontrol"] floating enable
+for_window [class="qt5ct"] floating enable sticky enable border normal
+for_window [class="Qtconfig-qt4"] floating enable sticky enable border normal
+for_window [class="Simple-scan"] floating enable border normal
+for_window [class="(?i)System-config-printer.py"] floating enable border normal
+for_window [class="Skype"] floating enable border normal
+for_window [class="Timeset-gui"] floating enable border normal
+for_window [class="(?i)virtualbox"] floating enable border normal
+for_window [class="Xfburn"] floating enable
 
 
 # Set the background
-exec sh ~/.fehbg
+# exec sh ~/.fehbg
+
+################################################################################################
+## sound-section - DO NOT EDIT if you wish to automatically upgrade Alsa -> Pulseaudio later! ##
+################################################################################################
+#exec --no-startup-id volumeicon
+#bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
+exec --no-startup-id start-pulseaudio-x11
+exec --no-startup-id pa-applet
+bindsym $mod+Ctrl+m exec pavucontrol
+
 
 exec_always --no-startup-id xrdb ~/.Xresources
-exec_always --no-startup-id wal -R -n
-exec --no-startup-id picom
+exec --no-startup-id picom --experimental-backgrounds
 exec --no-startup-id redshift -l 38.33:77.44
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 exec --no-startup-id mate-power-manager
 exec --no-startup-id nm-applet
+exec --no-startup-id manjaro-hello
+exec --no-startup-id clipit
+exec --no-startup-id pamac-tray
 
+exec --no-startup-id blueman-applet
+
+exec_always --no-startup-id ff-theme-util
+exec_always --no-startup-id fix_xcursor
+
+exec_always --no-startup-id wal -R
+
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh example
+
+# For touchpad gestures
+exec --no-startup-id $HOME/.gem/ruby/2.7.0/bin/fusuma
+
+# For screen rotation
+exec --no-startup-id $HOME/bin/2in1screen
+
+# For swapping between tablet and laptop modes
+exec --no-startup-id watch_tablet
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+# bar {
+  #font pango:Font Awesome 5 Free Regular 11
+  #font pango:Axaxax Bold 12
+  # font pango:VictorMono Nerd Font Medium 12
+	# i3bar_command i3bar
+  # status_command i3blocks
+  # position top
+
+	# bindsym button4 nop
+	# bindsym button5 nop
+  
+  # colors {
+    # background $bg
+    # statusline $fg
+    # separator  $fg-alt
+    
+    # focused_workspace $bg $fg-alt $bg
+    # inactive_workspace $bg $bg $fg
+  # }
+# }
+
+# hide/unhide i3status bar
+# bindsym $mod+m bar mode toggle
+
+bindsym XF86MonBrightnessUp exec $HOME/bin/safe_xbacklight.sh up notify
+bindsym XF86MonBrightnessDown exec $HOME/bin/safe_xbacklight.sh down notify
