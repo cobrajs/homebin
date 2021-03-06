@@ -371,3 +371,5 @@ shopt -s histappend
 export PATH=$PATH:$HOME/.gem/ruby/2.7.0/bin
 
 (cat ~/.cache/wal/sequences &)
+
+export BROWSER=/usr/bin/firefox

@@ -326,7 +326,7 @@ bindsym $mod+Ctrl+m exec pavucontrol
 
 
 exec_always --no-startup-id xrdb ~/.Xresources
-exec --no-startup-id picom --experimental-backgrounds
+exec --no-startup-id picom --experimental-backends
 exec --no-startup-id redshift -l 38.33:77.44
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 

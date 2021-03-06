@@ -144,8 +144,8 @@ label-mode-background = ${colors.background}
 label-focused = %index%
 label-focused-background = ${self.label-mode-foreground}
 label-focused-foreground = ${self.label-mode-background}
-;label-focused-underline= ${colors.foreground-alt}
-label-focused-padding = 1
+label-focused-underline= ${colors.foreground-alt}
+label-focused-padding = 2
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %index%
@@ -153,9 +153,9 @@ label-unfocused-padding = 1
 
 ; visible = Active workspace on unfocused monitor
 label-visible = %index%
-label-visible-background = ${self.label-focused-background}
-;label-visible-underline = ${self.label-focused-underline}
-label-visible-padding = ${self.label-focused-padding}
+label-visible-background = ${colors.foreground-alt}
+label-visible-padding = 1
+label-visible-foreground = ${colors.background}
 
 ; urgent = Workspace with urgency hint set
 label-urgent = %index%
@@ -164,20 +164,6 @@ label-urgent-padding = 2
 
 ; Separator in between workspaces
 ; label-separator = |
-
-
-[module/mpd]
-type = internal/mpd
-format-online = <label-song>  <icon-prev> <icon-stop> <toggle> <icon-next>
-
-icon-prev = 
-icon-stop = 
-icon-play = 
-icon-pause = 
-icon-next = 
-
-label-song-maxlen = 25
-label-song-ellipsis = true
 
 [module/xbacklight]
 type = internal/xbacklight
@@ -460,7 +446,7 @@ menu-1-0-exec = menu-open-0
 menu-1-1=
 menu-1-1-exec= chromium &
 
-:: Launcher: urxvt
+;; Launcher: urxvt
 menu-1-2="    "
 menu-1-2-exec = urxvt &
 

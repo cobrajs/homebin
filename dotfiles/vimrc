@@ -21,15 +21,15 @@ call plug#begin()
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 nnoremap <C-p> :Files<cr>
-nnoremap <C-P> :GFiles<cr>
+nnoremap <leader>p :GFiles<cr>
 
 " commentary: commenting lines and stuff
 Plug 'tpope/vim-commentary'
 
 " deoplete: completion
-Plug 'Shougo/deoplete.nvim'
-Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc'
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'roxma/nvim-yarp'
+" Plug 'roxma/vim-hug-neovim-rpc'
 let g:deoplete#enable_at_startup = 1
 
 " ack: for searching in files
@@ -47,6 +47,11 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && v:this_session == ""
 " Plug 'othree/yajs'
 " Plug 'othree/html5'
 Plug 'sheerun/vim-polyglot'
+
+" HTML Expanding with Emmet
+Plug 'mattn/emmet-vim'
+
+Plug 'w0rp/ale'
 
 " Themes
 Plug 'mhartington/oceanic-next'
@@ -66,66 +71,6 @@ set background=dark
 " color zenburn
 colorscheme OceanicNext
 
-
-let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
-
-" auto-install vim-plug
-if empty(glob('~/.vim/autoload/plug.vim'))
-	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall
-endif
-
-" ==============
-" vim-plug block
-" ==============
-
-call plug#begin()
-
-" fzf: fuzzy searching
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-nnoremap <C-p> :Files<cr>
-nnoremap <C-P> :GFiles<cr>
-
-" commentary: commenting out lines and stuff
-Plug 'tpope/vim-commentary'
-
-" deoplete: completion
-" Plug 'Shougo/deoplete.nvim'
-" Plug 'roxma/nvim-yarp'
-" Plug 'roxma/vim-hug-neovim-rpc'
-" let g:deoplete#enable_at_startup = 1
-
-" ack: for searching in files
-Plug 'mileszs/ack.vim'
-if executable('ag')
-	let g:ackprg = 'ag --vimgrep'
-endif
-
-" nerdtree: file browsing and stuff
-Plug 'preservim/nerdtree'
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && v:this_session == "" | NERDTree | endif
-
-" Syntax Highlighting
-Plug 'sheerun/vim-polyglot'
-
-" Themes
-Plug 'mhartington/oceanic-next'
-Plug 'jnurmine/Zenburn'
-
-call plug#end()
-
-
-" Theme settings
-set t_Co=256
-if (has("termguicolors") && !&term =~# '^screen')
-	set termguicolors
-endif
-set background=dark
-
-" Colorscheme
-colorscheme OceanicNext
 
 let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
 
@@ -259,7 +204,7 @@ function! RunIt()
   elseif base == 'lua' && ! has_main > 0
     !lua %
   elseif base == 'py'
-    !python2 %
+    !python %
   elseif base == 'pl'
     !perl %
   elseif base == 'sh'
@@ -274,6 +219,8 @@ function! RunIt()
     !processing-java --sketch=%:h --output=/home/cobra/tmp/processing-output --force --run
   elseif base == 'nim'
     !nim c -r %
+  elseif base == 'js'
+    !node %
   elseif is_cargo > 0 
     !cargo run
   else
