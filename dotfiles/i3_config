@@ -89,35 +89,47 @@ hide_edge_borders smart
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# start a terminal
+# Start a terminal
 bindsym $mod+Shift+Return exec i3-sensible-terminal
 
-# kill focused window
+# Kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
+# Start program launcher
 bindsym $mod+p exec rofi -show drun -font $font
+
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # Launch rofi in window picking mode
-bindsym $mod+Tab exec rofi -show window -font $font
+# bindsym $mod+Tab exec rofi -show window -font $font
+bindsym $mod+Tab workspace back_and_forth
 
 
 # Some launchers
+# Launcher / Restart notifications
 bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
+# Launcher / Take a screenshot
 bindsym Print exec --no-startup-id i3-scrot
+# Launcher / Take a screenshot of a window
 bindsym $mod+Print --release exec --no-startup-id i3-scrot -w
+# Launcher / Take a screenshot of a selection
 bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
+# Launcher / Show help PDF
 bindsym $mod+Shift+Ctrl+h exec xdg-open /usr/share/doc/manjaro/i3_help.pdf
+# Launcher / Window killer
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 
 # change focus
+# Focus Window / Left
 bindsym $mod+h focus left
+# Focus Window / Down
 bindsym $mod+j focus down
+# Focus Window / Up
 bindsym $mod+k focus up
+# Focus Window / Right
 bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
@@ -127,9 +139,13 @@ bindsym $mod+l focus right
 # bindsym $mod+Right focus right
 
 # move focused window
+# Move Window / Left
 bindsym $mod+Shift+h move left
+# Move Window / Down
 bindsym $mod+Shift+j move down
+# Move Window / Up
 bindsym $mod+Shift+k move up
+# Move Window / Right
 bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
@@ -139,49 +155,59 @@ bindsym $mod+Shift+l move right
 # bindsym $mod+Shift+Right move right
 
 # Changed to be more like tmux
-# split in horizontal orientation
+# Containers / Split in horizontal orientation
 bindsym $mod+bar split h;exec notify-send 'tile horizontally'
-# split in vertical orientation
+# Containers / Split in vertical orientation
 bindsym $mod+minus split v;exec notify-send 'tile vertically'
+# Containers / Toggle Split
 bindsym $mod+q split toggle
 
-# enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
-
-# change container layout (stacked, tabbed, toggle split)
+# Containers / Layout Stacking
 bindsym $mod+s layout stacking
+# Containers / Layout Tabbed
 bindsym $mod+w layout tabbed
+# Containers / Layout Split
 bindsym $mod+e layout toggle split
 
-# toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
-
-# change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
-
-# focus the parent container
+# Containers / Focus Parent container
 bindsym $mod+a focus parent
+# Containers / Focus Child container
 bindsym $mod+shift+a focus child
 
-# toggle sticky
+# Floating / Change focus between tiling/floating
+bindsym $mod+space focus mode_toggle
+# Floating / Toggle between tiling/floating
+bindsym $mod+Shift+space floating toggle
+
+# Misc / Fullscreen window
+bindsym $mod+f fullscreen toggle
+
+# Misc / toggle sticky
 bindsym $mod+Shift+s sticky toggle
 
 # focus the child container
 #bindsym $mod+d focus child
 
-# workspace back and forth (with/without active container)
 workspace_auto_back_and_forth yes
+# Workspace / Workspace back and forth toggle
 bindsym $mod+b workspace back_and_forth
+# Workspace / Workspace back and forth toggle with window
 bindsym $mod+Shift+b move container to workspace back_and_forth; workspace back_and_forth
 
 # Scratchpad stuff
+# Misc / Move to Scratchpad
 bindsym $mod+Shift+grave move scratchpad
+# Misc / Show Scratchpad
 bindsym $mod+grave scratchpad show
 
 # Audio and music control
+# Music / Play/Pause CMUS
 bindsym $mod+Ctrl+c exec cmus-remote -u
+# Music / Stop CMUS
 bindsym $mod+Ctrl+v exec cmus-remote -s
+# Music / Previous CMUS
 bindsym $mod+Ctrl+z exec cmus-remote -r
+# Music / Next CMUS
 bindsym $mod+Ctrl+b exec cmus-remote -n
 
 # Define names for default workspaces for which we configure key bindings later on.
@@ -197,33 +223,51 @@ set $ws8 "8"
 set $ws9 "9"
 
 # switch to workspace
+# Workspace / Switch to workspace 1
 bindsym $mod+1 workspace $ws1
+# Workspace / Switch to workspace 2
 bindsym $mod+2 workspace $ws2
+# Workspace / Switch to workspace 3
 bindsym $mod+3 workspace $ws3
+# Workspace / Switch to workspace 4
 bindsym $mod+4 workspace $ws4
+# Workspace / Switch to workspace 5
 bindsym $mod+5 workspace $ws5
+# Workspace / Switch to workspace 6
 bindsym $mod+6 workspace $ws6
+# Workspace / Switch to workspace 7
 bindsym $mod+7 workspace $ws7
+# Workspace / Switch to workspace 8
 bindsym $mod+8 workspace $ws8
+# Workspace / Switch to workspace 9
 bindsym $mod+9 workspace $ws9
 
 # move focused container to workspace
+# Workspace / Move to workspace 1
 bindsym $mod+Shift+1 move container to workspace $ws1
+# Workspace / Move to workspace 2
 bindsym $mod+Shift+2 move container to workspace $ws2
+# Workspace / Move to workspace 3
 bindsym $mod+Shift+3 move container to workspace $ws3
+# Workspace / Move to workspace 4
 bindsym $mod+Shift+4 move container to workspace $ws4
+# Workspace / Move to workspace 5
 bindsym $mod+Shift+5 move container to workspace $ws5
+# Workspace / Move to workspace 6
 bindsym $mod+Shift+6 move container to workspace $ws6
+# Workspace / Move to workspace 7
 bindsym $mod+Shift+7 move container to workspace $ws7
+# Workspace / Move to workspace 8
 bindsym $mod+Shift+8 move container to workspace $ws8
+# Workspace / Move to workspace 9
 bindsym $mod+Shift+9 move container to workspace $ws9
 
-# reload the configuration file
+# Misc / Reload the configuration file
 bindsym $mod+Shift+c reload
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+# Misc / Restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+# bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
 
 # Set shut down, restart and locking features
@@ -332,7 +376,7 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 exec --no-startup-id mate-power-manager
 exec --no-startup-id nm-applet
-exec --no-startup-id manjaro-hello
+#exec --no-startup-id manjaro-hello
 exec --no-startup-id clipit
 exec --no-startup-id pamac-tray
 

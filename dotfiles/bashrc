@@ -354,7 +354,6 @@ function pattach {
 alias tmux="TERM=screen-256color-bce tmux"
 alias pgrep="pgrep -a"
 
-
 # Bash won't get SIGWINCH if another process is in the foreground.
 # Enable checkwinsize so that bash will check the terminal size when
 # it regains control.  #65623
