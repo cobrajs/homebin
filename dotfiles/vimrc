@@ -186,6 +186,7 @@ command! Love wall | !love .
 function! RunIt()
   let base = expand("%:e")
   let has_main = system("find " . expand("%:h") . " -maxdepth 1 -name 'main.lua' | wc -l")
+  let has_html_index = system("find " . expand("%:h") . " -maxdepth 1 -name 'index.html' | wc -l")
   let pico8window = trim(system("xdotool search --class 'pico8'"))
   let tic80window = trim(system("xdotool search --name 'TIC-80.*" . expand("%:t") . "'"))
   let is_love = system("grep -i 'love.' " . expand("%") . " | wc -l")
@@ -199,6 +200,10 @@ function! RunIt()
     elseif is_moai > 0
       !moai %:h/main.lua
     endif
+  elseif base == 'js' || base == 'html' && has_html_index > 0
+    !html_runner %:h
+  elseif base == 'html'
+    !html_runner %
   elseif base == 'p8' && pico8window
     execute "silent !xdotool key --window " . pico8window . " ctrl+r"
     redraw!

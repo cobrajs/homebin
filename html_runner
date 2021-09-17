@@ -1,0 +1,36 @@
+#!/bin/bash
+
+
+FILENAME=$(basename -- "$1")
+EXTENSION="${FILENAME##*.}"
+
+# If running with an HTML filename passed in, then run in that directory and redirect to the filename on the temp server
+if [ $EXTENSION = "html" ]; then
+  NAME="/$FILENAME"
+else
+  cd $1
+  NAME=''
+
+  if grep -q "\.\./" index.html; then
+    NAME="/`basename $PWD`"
+    cd ..
+  fi
+fi
+
+echo $NAME
+
+trap "kill 0" EXIT
+
+PORT=`shuf -i 8000-65000 -n 1`
+
+python -m SimpleHTTPServer $PORT &
+SERVER_PID=$!
+
+sleep 0.2s
+
+# Check to see if garcon exists to use (for ChromeOS)
+if command -v garcon-url-handler &> /dev/null; then
+  garcon-url-handler --client --url "http://0.0.0.0:${PORT}${NAME}"
+fi
+
+wait
