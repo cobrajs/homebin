@@ -48,10 +48,32 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && v:this_session == ""
 " Plug 'othree/html5'
 Plug 'sheerun/vim-polyglot'
 
+" Indent guides
+Plug 'nathanaelkane/vim-indent-guides'
+set ts=2 sw=2 et
+let g:indent_guides_start_level=1
+let g:indent_guides_guide_size=1
+let g:indent_guids_enable_on_vim_startup=1
+nnoremap <leader>id :IndentGuidesToggle<cr>
+
 " HTML Expanding with Emmet
 Plug 'mattn/emmet-vim'
 
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
+
+" Flutter
+Plug 'dart-lang/dart-vim-plugin'
+Plug 'thosakwe/vim-flutter'
+Plug 'natebosch/vim-lsc'
+Plug 'natebosch/vim-lsc-dart'
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Bracey for Live HTML
+Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server'}
+
+" Haxe Plugin
+Plug 'jdonaldson/vaxe'
 
 " Themes
 Plug 'mhartington/oceanic-next'
@@ -59,7 +81,7 @@ Plug 'jnurmine/Zenburn'
 
 call plug#end()
 
-
+let g:lsc_auto_map = v:true
 
 " Theme settings 
 set t_Co=256
@@ -220,7 +242,7 @@ function! RunIt()
   elseif base == 'sh'
     !bash %
   elseif base == 'hx' || base == 'nmml'
-    !lime test neko -debug
+    !haxelib run lime test neko -debug
   elseif base == 'lsp' || base == 'lisp'
     !clisp %
   elseif base == 'scala'
@@ -390,3 +412,4 @@ let &t_ut=''
 " Enable italic comments
 highlight Comment cterm=italic
 
+set backupcopy=yes
